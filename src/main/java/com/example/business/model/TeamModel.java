@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamModel {
 
+    private Long id;
     private String type;
     private String name;
     private List<TeammateModel> members;

@@ -20,7 +20,11 @@ import static javax.persistence.FetchType.LAZY;
 public class Team {
 
     @Id
-    @Column(name = "TEAM_NAME", updatable = false, nullable = false)
+    @SequenceGenerator(name = "teamSequence", sequenceName = "TEAM_SEQUENCE", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teamSequence")
+    @Column(name = "TEAM_ID", updatable = false, nullable = false)
+    private Long id;
+    @Column(name = "TEAM_NAME", nullable = false)
     private String name;
     @Column(name = "TEAM_TYPE")
     private String type;

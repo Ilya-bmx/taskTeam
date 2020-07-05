@@ -19,7 +19,7 @@ public class Teammate {
     @SequenceGenerator(name = "teammateSequence", sequenceName = "TEAMMATE_SEQUENCE", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teammateSequence")
     @Column(name = "TEAMMATE_ID", updatable = false, nullable = false)
-    private Long teammateId;
+    private Long id;
     @Column(name = "TEAMMATE_NAME")
     private String teammateName;
     @Column(name = "LASTNAME")

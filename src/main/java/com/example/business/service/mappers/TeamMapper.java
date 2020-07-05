@@ -20,6 +20,7 @@ public class TeamMapper {
 
     public Team toTeam(TeamModel teamModel, List<Teammate> teammates) {
         return Team.builder()
+                .id(teamModel.getId())
                 .name(teamModel.getName())
                 .type(teamModel.getType())
                 .members(teammates)
@@ -34,6 +35,7 @@ public class TeamMapper {
 
     public Teammate toTeammate(TeammateModel teammateModel) {
         return Teammate.builder()
+                .id(teammateModel.getId())
                 .age(teammateModel.getAge())
                 .lastName(teammateModel.getLastName())
                 .middleName(teammateModel.getMiddleName())
@@ -45,6 +47,7 @@ public class TeamMapper {
 
     public TeamModel toTeamModel(Team team) {
         return TeamModel.builder()
+                .id(team.getId())
                 .name(team.getName())
                 .type(team.getType())
                 .members(toTeammateModel(team.getMembers()))
@@ -59,7 +62,7 @@ public class TeamMapper {
 
     public TeammateModel toTeammateModel(Teammate teammate) {
         return TeammateModel.builder()
-                .id(teammate.getTeammateId())
+                .id(teammate.getId())
                 .age(teammate.getAge())
                 .name(teammate.getTeammateName())
                 .lastName(teammate.getLastName())

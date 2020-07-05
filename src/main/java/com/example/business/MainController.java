@@ -25,6 +25,11 @@ public class MainController {
         return teamService.createTeam(teamModel);
     }
 
+    @PostMapping("/update")
+    public String updateTeam(@RequestBody TeamModel teamModel) {
+        return teamService.updateTeam(teamModel);
+    }
+
     @GetMapping("/delete")
     public String deleteTeam(@RequestParam String teamName) {
         return teamService.deleteTeam(teamName);
@@ -38,6 +43,11 @@ public class MainController {
     @PostMapping("/teammate/create")
     public String createTeam(@RequestBody TeammateModel teammateModel) {
         return teamService.createTeammate(teammateModel);
+    }
+
+    @PostMapping("/teammate/update")
+    public String updateTeam(@RequestBody TeammateModel teammateModel) {
+        return teamService.updateTeammate(teammateModel);
     }
 
     @GetMapping("/teammate/delete")
