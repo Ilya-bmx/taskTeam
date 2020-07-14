@@ -32,4 +32,7 @@ public class Teammate {
     private String position;
     @Column(name = "TEAM_NAME")
     private String teamName;
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 }

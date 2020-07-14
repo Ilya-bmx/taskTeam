@@ -48,7 +48,6 @@ public class TeamService {
     public String createTeammate(TeammateModel teammateModel) {
         Teammate teammate = teamMapper.toTeammate(teammateModel);
         teamRepository.findTeamByName(teammateModel.getTeamName())
-                .map(team -> team.getMembers().add(teammate))
                 .orElseThrow(() -> new RuntimeException(NO_TEAM_ERROR));
         teammateRepository.save(teammate);
         return "Teammate with id " + teammate.getId() +
@@ -57,16 +56,11 @@ public class TeamService {
 
     public String updateTeammate(TeammateModel teammateModel) {
 
-        if (teammateModel.getId() == null) throw new RuntimeException("What about teammate id?");
+        if (teammateModel.getId() == null) {
+            throw new RuntimeException("What about teammate id?");
+        }
 
         Teammate updatedTeammate = teamMapper.toTeammate(teammateModel);
-        Teammate teammateToUpdate = teammateRepository.findById(teammateModel.getId())
-                .orElseThrow(() -> new RuntimeException("Teammate not found id: " + teammateModel.getId()));
-
-        if (!teammateModel.getTeamName().equals(teammateToUpdate.getTeamName())) {
-            removeTeammateFromOldTeam(teammateToUpdate);
-            addToNewTeam(teammateToUpdate, teammateModel.getTeamName());
-        }
 
         teammateRepository.save(updatedTeammate);
         return "Teammate was updated";
@@ -81,8 +75,13 @@ public class TeamService {
     public List<TeamModel> getAllTeams() {
         return teamRepository.findAll()
                 .stream()
-                .map(teamMapper::toTeamModel)
+                .map(this::toTeamModel)
                 .collect(toList());
+    }
+
+    private TeamModel toTeamModel(Team team) {
+        List<Teammate> teammates = teammateRepository.findAllByTeam(team);
+        return teamMapper.toTeamModel(team, teammates);
     }
 
     public String deleteTeammate(Long id) {
@@ -99,14 +98,14 @@ public class TeamService {
 
     private Team makeTeam(TeamModel teamModel) {
         List<Teammate> teammates = teamMapper.toTeammates(teamModel.getMembers());
-        Team team = teamMapper.toTeam(teamModel, teammates);
+        Team team = teamMapper.toTeam(teamModel);
+        teamRepository.save(team);
+        teammates.forEach(teammate -> teammate.setTeam(team));
         teammates.forEach(teammateRepository::save);
-        return teamRepository.save(team);
+        return team;
     }
 
     private void deleteTeammate(Teammate teammate) {
-        teamRepository.findTeamByName(teammate.getTeamName())
-                .map(team -> team.getMembers().remove(teammate));
         teammateRepository.deleteById(teammate.getId());
     }
 
@@ -122,18 +121,6 @@ public class TeamService {
     private Team refreshTeamFields(TeamModel teamModel, Team team) {
         team.setName(teamModel.getName());
         team.setType(teamModel.getType());
-        team.getMembers().forEach(x -> x.setTeamName(teamModel.getName()));
         return teamRepository.save(team);
-    }
-
-    private void removeTeammateFromOldTeam(Teammate teammateToUpdate) {
-        teamRepository.findTeamByName(teammateToUpdate.getTeamName())
-                .map(team -> team.getMembers().removeIf(teammate -> teammate.getId().equals(teammateToUpdate.getId())));
-    }
-
-    private void addToNewTeam(Teammate teammateToUpdate, String teamName) {
-        teamRepository.findTeamByName(teamName)
-                .map(team1 -> team1.getMembers().add(teammateToUpdate))
-                .orElseThrow(() -> new RuntimeException("no such team"));
     }
 }

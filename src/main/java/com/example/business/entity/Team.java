@@ -6,10 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Data
 @Builder
@@ -28,6 +24,4 @@ public class Team {
     private String name;
     @Column(name = "TEAM_TYPE")
     private String type;
-    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
-    private List<Teammate> members = new ArrayList<>();
 }

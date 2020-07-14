@@ -18,12 +18,11 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class TeamMapper {
 
-    public Team toTeam(TeamModel teamModel, List<Teammate> teammates) {
+    public Team toTeam(TeamModel teamModel) {
         return Team.builder()
                 .id(teamModel.getId())
                 .name(teamModel.getName())
                 .type(teamModel.getType())
-                .members(teammates)
                 .build();
     }
 
@@ -45,12 +44,12 @@ public class TeamMapper {
                 .build();
     }
 
-    public TeamModel toTeamModel(Team team) {
+    public TeamModel toTeamModel(Team team, List<Teammate> teammates) {
         return TeamModel.builder()
                 .id(team.getId())
                 .name(team.getName())
                 .type(team.getType())
-                .members(toTeammateModel(team.getMembers()))
+                .members(toTeammateModel(teammates))
                 .build();
     }
 
