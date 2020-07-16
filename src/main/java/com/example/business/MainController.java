@@ -4,8 +4,11 @@ import com.example.business.model.TeamModel;
 import com.example.business.model.TeammateModel;
 import com.example.business.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,18 +18,27 @@ public class MainController {
 
     private final TeamService teamService;
 
+    @GetMapping("/")
+    public ModelAndView startPage(Model model) {
+
+        ModelAndView modelAndView = new ModelAndView("team");
+        modelAndView.addObject("teamModel", new TeamModel());
+
+        return modelAndView;
+    }
+
     @GetMapping("/all")
     public List<TeamModel> getAllTeams() {
         return teamService.getAllTeams();
     }
 
     @PostMapping("/create")
-    public String createTeam(@RequestBody TeamModel teamModel) {
+    public String createTeam(@RequestBody @ModelAttribute TeamModel teamModel) {
         return teamService.createTeam(teamModel);
     }
 
     @PostMapping("/update")
-    public String updateTeam(@RequestBody TeamModel teamModel) {
+    public String updateTeam(@RequestBody @Valid TeamModel teamModel) {
         return teamService.updateTeam(teamModel);
     }
 
